@@ -1,0 +1,19 @@
+# Never deploy local secrets or user data
+.env
+.env.*
+data/
+storage/
+
+# Development-only files
+venv/
+.venv/
+__pycache__/
+.pytest_cache/
+tests/
+tools/
+conftest.py
+
+# Local backups and logs
+*.log
+*.bak*
+*.before_*
