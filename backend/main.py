@@ -31,15 +31,37 @@ async def lifespan(app: FastAPI):
         raise
     finally:
         db.close()
-    # INTELLIDOCS_STARTUP_VECTOR_INDEX_RECOVERY_V1: rebuild semantic vectors and FAISS-to-document-ID mappings from persisted text.
+    # INTELLIDOCS_STARTUP_VECTOR_INDEX_RECOVERY_V1: semantic index recovery runs in the background.
+    # Recover semantic vectors in the background so the HTTP port opens first.
     import logging
+    import threading
+    import time
     logger = logging.getLogger(__name__)
-    vector_store = None
-    try:
-        from backend.api.deps import embedding_engine_instance, vector_store_instance
-        from backend.core.vector_index_recovery import rebuild_vector_index
-        vector_store = vector_store_instance
-        if settings.ENABLE_SEMANTIC_SEARCH and embedding_engine_instance.is_available() and vector_store.is_available():
+
+    def recover_semantic_index_in_background():
+        # Let Uvicorn bind the port before importing/loading the AI model.
+        time.sleep(5)
+        vector_store = None
+        try:
+            from backend.api.deps import embedding_engine_instance, vector_store_instance
+            from backend.core.vector_index_recovery import rebuild_vector_index
+            vector_store = vector_store_instance
+
+            if not settings.ENABLE_SEMANTIC_SEARCH:
+                return
+
+            if not embedding_engine_instance.ensure_loaded():
+                logger.warning(
+                    "Semantic model unavailable; keyword search remains available"
+                )
+                return
+
+            if not vector_store.is_available():
+                logger.warning(
+                    "Semantic recovery skipped because FAISS is unavailable"
+                )
+                return
+
             vector_db = SessionLocal()
             try:
                 semantic_count = rebuild_vector_index(
@@ -47,19 +69,27 @@ async def lifespan(app: FastAPI):
                 )
             finally:
                 vector_db.close()
-            logger.info("Rebuilt semantic vector index for %d document(s)", semantic_count)
-        else:
-            logger.warning(
-                "Semantic vector recovery skipped: semantic search or model/FAISS is unavailable"
+
+            logger.info(
+                "Rebuilt semantic vector index for %d document(s)", semantic_count
             )
-    except Exception:
-        # Keep the app and keyword search available if optional semantic recovery fails.
-        if vector_store is not None:
-            try:
-                vector_store.reset()
-            except Exception:
-                pass
-        logger.exception("Semantic vector recovery failed; continuing without semantic ANN")
+        except Exception:
+            if vector_store is not None:
+                try:
+                    vector_store.reset()
+                except Exception:
+                    pass
+            logger.exception(
+                "Semantic vector recovery failed; keyword search remains available"
+            )
+
+    if settings.ENABLE_SEMANTIC_SEARCH:
+        threading.Thread(
+            target=recover_semantic_index_in_background,
+            name="intellidocs-semantic-recovery",
+            daemon=True
+        ).start()
+
     yield
 
 app = FastAPI(
