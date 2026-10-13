@@ -1,0 +1,2181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IntelliDocs — Smart Document Processing Platform</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+  <!-- Toast Feedback Notifications Container -->
+  <div id="toast-container"></div>
+
+  <!-- AUTHENTICATION VIEW | INTELLIDOCS_AUTH_UI_POLISH_V1 -->
+  <div id="auth-view" class="auth-container">
+  <header class="auth-topbar">
+    <a class="auth-topbar-brand" href="#" aria-label="IntelliDocs home" onclick="return false;">
+      <span class="auth-brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" focusable="false">
+          <path d="M10 7.5h17.5a3 3 0 0 1 3 3v22H12.5a3 3 0 0 1-3-3z" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M7 11h17.5a3 3 0 0 1 3 3v18.5H10a3 3 0 0 1-3-3z" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 17h10M12 21h10M12 25h7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="auth-topbar-wordmark">IntelliDocs<span class="auth-topbar-caption">SMART DOCUMENT WORKSPACE</span></span>
+    </a>
+    <button type="button" class="auth-theme-toggle" onclick="toggleTheme()" aria-label="Toggle light and dark theme" title="Toggle light/dark theme">
+      <span class="auth-theme-glyph" aria-hidden="true"></span>
+      <span>Appearance</span>
+    </button>
+  </header>
+
+  <div class="auth-shell">
+    <section class="auth-showcase" aria-label="About IntelliDocs">
+      <div class="auth-kicker"><span class="auth-kicker-dot"></span> YOUR DOCUMENTS, IN ONE PLACE</div>
+      <h2>Less searching.<br><span>More understanding.</span></h2>
+      <p class="auth-showcase-copy">A calmer way to manage your files, discover useful insights and keep important information within reach.</p>
+
+      <div class="auth-benefit-list">
+        <div class="auth-benefit">
+          <span class="auth-benefit-icon" aria-hidden="true">⌕</span>
+          <span><strong>Find what matters</strong><small>Search across your document library with less effort.</small></span>
+        </div>
+        <div class="auth-benefit">
+          <span class="auth-benefit-icon" aria-hidden="true">✦</span>
+          <span><strong>Understand documents faster</strong><small>Use AI summaries and contextual insights to get oriented.</small></span>
+        </div>
+        <div class="auth-benefit">
+          <span class="auth-benefit-icon" aria-hidden="true">▤</span>
+          <span><strong>Keep work organized</strong><small>Bring files, categories and sharing into one workspace.</small></span>
+        </div>
+      </div>
+
+      <div class="auth-showcase-footnote"><span aria-hidden="true">✦</span> Thoughtful tools for document-heavy work.</div>
+    </section>
+
+    <main class="auth-card">
+
+      <div class="auth-logo">
+        <span class="auth-form-kicker">WELCOME TO INTELLIDOCS</span>
+        <h1>Your workspace awaits.</h1>
+        <p>Sign in or create an account to get started.</p>
+      </div>
+
+      <div class="auth-tabs">
+        <div id="tab-login" class="auth-tab active" onclick="switchAuthTab('login')">Sign In</div>
+        <div id="tab-register" class="auth-tab" onclick="switchAuthTab('register')">Register</div>
+      </div>
+
+      <!-- Login Form -->
+      <form id="form-login" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="login-username">Username</label>
+          <input type="text" id="login-username" class="form-control" placeholder="Enter username" autocomplete="username" required autofocus>
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <div class="auth-password-wrap">
+            <input type="password" id="login-password" class="form-control" placeholder="Enter password" autocomplete="current-password" required>
+            <button type="button" class="auth-password-toggle" onclick="toggleAuthPassword('login-password', this)" aria-label="Show password" aria-pressed="false">Show</button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 8px;">
+          <span>Sign In</span>
+        </button>
+      </form>
+
+            <div id="auth-forgot-link" class="auth-forgot-link">
+        <button type="button" onclick="showForgotPassword()">Forgot password?</button>
+      </div>
+
+<!-- Register Form -->
+      <form id="form-register" style="display: none;" onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <label for="reg-username">Username</label>
+          <input type="text" id="reg-username" class="form-control" placeholder="Choose a username" autocomplete="username" required>
+        </div>
+        <div class="form-group">
+          <label for="reg-email">Email Address</label>
+          <input type="email" id="reg-email" class="form-control" placeholder="name@example.com" autocomplete="email" required>
+        </div>
+        <div class="form-group">
+          <label for="reg-password">Password</label>
+          <div class="auth-password-wrap">
+            <input type="password" id="reg-password" class="form-control" placeholder="Create password" autocomplete="new-password" required minlength="8" oninput="updateRegisterPasswordStrength()">
+            <button type="button" class="auth-password-toggle" onclick="toggleAuthPassword('reg-password', this)" aria-label="Show password" aria-pressed="false">Show</button>
+          </div>
+          <div class="auth-password-strength" id="reg-password-strength" aria-live="polite">
+            <div class="auth-password-strength-track"><span id="reg-password-strength-fill"></span></div>
+            <small id="reg-password-strength-label">Use at least 8 characters</small>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="reg-confirm-password">Confirm password</label>
+          <div class="auth-password-wrap">
+            <input type="password" id="reg-confirm-password" class="form-control" placeholder="Re-enter password" autocomplete="new-password" required minlength="8">
+            <button type="button" class="auth-password-toggle" onclick="toggleAuthPassword('reg-confirm-password', this)" aria-label="Show password" aria-pressed="false">Show</button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 8px;">
+          <span>Create Account</span>
+        </button>
+      </form>
+    </main>
+  
+
+      <!-- Forgot Password / Reset Password panels -->
+      <section id="auth-forgot-panel" class="auth-subview" style="display:none;" aria-labelledby="auth-forgot-title">
+        <button type="button" class="auth-back-link" onclick="showAuthForm('login')">&#8592; Back to sign in</button>
+        <div class="auth-subview-heading">
+          <h2 id="auth-forgot-title">Forgot your password?</h2>
+          <p>Enter the email address associated with your account. If email delivery is configured, we will send a secure reset link.</p>
+        </div>
+        <form id="form-forgot-password" onsubmit="handleForgotPassword(event)">
+          <div class="form-group">
+            <label for="forgot-email">Email address</label>
+            <input type="email" id="forgot-email" class="form-control" placeholder="you@example.com" autocomplete="email" maxlength="254" required>
+          </div>
+          <button type="submit" class="btn btn-primary auth-submit-btn">Send reset link</button>
+          <p id="forgot-password-status" class="auth-flow-status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section id="auth-reset-panel" class="auth-subview" style="display:none;" aria-labelledby="auth-reset-title">
+        <button type="button" class="auth-back-link" onclick="showAuthForm('login')">&#8592; Back to sign in</button>
+        <div class="auth-subview-heading">
+          <h2 id="auth-reset-title">Create a new password</h2>
+          <p>Choose a strong password for your IntelliDocs account.</p>
+        </div>
+        <form id="form-reset-password" onsubmit="handlePasswordReset(event)">
+          <div class="form-group">
+            <label for="reset-new-password">New password</label>
+            <div class="auth-password-wrap">
+              <input type="password" id="reset-new-password" class="form-control" autocomplete="new-password" minlength="8" maxlength="128" required>
+              <button type="button" class="auth-password-toggle" onclick="toggleAuthPassword('reset-new-password', this)" aria-label="Show password" aria-pressed="false">Show</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="reset-confirm-password">Confirm new password</label>
+            <div class="auth-password-wrap">
+              <input type="password" id="reset-confirm-password" class="form-control" autocomplete="new-password" minlength="8" maxlength="128" required>
+              <button type="button" class="auth-password-toggle" onclick="toggleAuthPassword('reset-confirm-password', this)" aria-label="Show password" aria-pressed="false">Show</button>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary auth-submit-btn">Reset password</button>
+          <p id="reset-password-status" class="auth-flow-status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      </div>
+</div>
+
+<!-- MAIN APP LAYOUT (Logged In) -->
+  <div id="app-view" class="app-layout" style="display: none;">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo" title="IntelliDocs">
+          <span class="intellidocs-logo" aria-hidden="true">
+            <svg viewBox="0 0 40 40" role="img">
+              <path class="logo-pages" d="M10 8h19a3 3 0 0 1 3 3v21a3 3 0 0 1-3 3H10z"/>
+              <path class="logo-cover" d="M7 6h19a3 3 0 0 1 3 3v23H10a3 3 0 0 1-3-3z"/>
+              <path class="logo-line" d="M12 13h12M12 17h10M12 21h7"/>
+              <path class="logo-pencil" d="M25.5 28.5l5.8-5.8 2 2-5.8 5.8-3.2.8z"/>
+              <path class="logo-pencil-tip" d="M25.5 28.5l.8-3.2 2.4 2.4z"/>
+            </svg>
+          </span>
+          <span>IntelliDocs</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a class="nav-item active" id="nav-dashboard" onclick="navigateTo('dashboard')">
+          <span>📊</span> Dashboard
+        </a>
+        <a class="nav-item" id="nav-library" onclick="navigateTo('library')">
+          <span>📁</span> Documents
+        </a>
+        <a class="nav-item" id="nav-upload" onclick="navigateTo('upload')">
+          <span>📤</span> Upload
+        </a>
+
+        <div class="nav-section-label">SMART INSIGHTS</div>
+        <a class="nav-item" id="nav-suggestions" onclick="navigateTo('suggestions')">
+          <span>💡</span> Suggestions
+          <span class="nav-badge" id="badge-suggestions" style="display: none;">0</span>
+        </a>
+        <a class="nav-item" id="nav-duplicates" onclick="navigateTo('duplicates')">
+          <span>👥</span> Duplicates
+          <span class="nav-badge" id="badge-duplicates" style="display: none;">0</span>
+        </a>
+
+        <div class="nav-section-label">ORGANIZATION</div>
+        <a class="nav-item" id="nav-quarantine" onclick="navigateTo('quarantine')">
+          <span>🛡️</span> Quarantine
+          <span class="nav-badge badge-warning" id="badge-quarantine" style="display: none;">0</span>
+        </a>
+        <a class="nav-item" id="nav-organization" onclick="navigateTo('organization')">
+          <span>🏷️</span> Folders & Categories
+        </a>
+        <a class="nav-item" id="nav-groups" onclick="navigateTo('groups')">
+          <span>👥</span> Sharing & Groups
+          <span class="nav-badge" id="badge-shared-received" style="display: none;" title="Received documents" aria-label="Received documents count">0</span>
+        </a>
+        <a class="nav-item" id="nav-explorer" onclick="navigateTo('explorer')">
+          <span>🗺️</span> Explorer Graph
+        </a>
+        <a class="nav-item" id="nav-trash" onclick="navigateTo('trash')">
+          <span>🗑️</span> Trash
+          <span class="nav-badge" id="badge-trash" style="display: none;" title="Documents currently in Trash" aria-label="Trash document count">0</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-secondary-nav">
+        <a class="nav-item" id="nav-help" onclick="navigateTo('help')">
+          <span>🆘</span> Help & Support
+        </a>
+        <a class="nav-item" id="nav-profile" onclick="navigateTo('profile')">
+          <span>👤</span> Profile
+        </a>
+        <a class="nav-item" id="nav-settings" onclick="navigateTo('settings')">
+          <span>⚙️</span> Settings
+        </a>
+      </div>
+
+      <div class="sidebar-user" onclick="navigateTo('profile')" style="cursor: pointer;" title="View Profile">
+        <div class="user-info">
+          <span class="user-name" id="user-display-name">User</span>
+          <span class="user-role" id="user-display-role">Member</span>
+        </div>
+        <button class="btn-logout" title="Log Out" onclick="event.stopPropagation(); handleLogout()">
+          🚪
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+
+      <!-- TOP HEADER -->
+      <header class="top-header">
+
+        <!-- Global Search -->
+        <div class="global-search-container">
+          <div class="search-input-wrap">
+            <input type="text" id="global-search-input" placeholder="Search document text, keywords..." oninput="handleSearchInput(this.value)" onkeydown="handleSearchKeyDown(event)">
+          </div>
+          <div id="search-autocomplete-box" class="autocomplete-dropdown"></div>
+        </div>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+          <!-- Theme Toggle Button -->
+          <button id="theme-toggle-btn" class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Light/Dark Theme">
+            <span id="theme-toggle-icon">🌙</span> <span id="theme-toggle-text">Dark</span>
+          </button>
+
+          <!-- Notification Bell -->
+          <div class="notification-bell-wrap">
+            <button class="notification-bell-btn" onclick="toggleNotificationPopover()" title="Notifications">
+              🔔
+              <span class="bell-badge" id="bell-unread-count" style="display: none;">0</span>
+            </button>
+            <div id="notification-popover" class="notifications-popover">
+              <div class="notifications-header">
+                <span>Notifications</span>
+                <button class="btn btn-secondary btn-sm" onclick="markAllNotificationsRead()">Mark all read</button>
+              </div>
+              <div id="notifications-list-box" class="notifications-list">
+                <div class="empty-state">No notifications</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Upload Button -->
+          <button class="btn btn-primary btn-sm" onclick="navigateTo('upload')">
+            <span>+ Upload</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- PAGE CONTENT AREA -->
+      <main class="page-content">
+
+        <!-- DASHBOARD VIEW -->
+        <section id="view-dashboard" class="page-view">
+          <div class="page-header">
+            <div class="page-title">
+              <h2>Dashboard</h2>
+              <p>Welcome back! Overview of your processed documents and intelligent insights.</p>
+            </div>
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="grid-stats">
+            <div class="stat-card card-interactive" onclick="navigateTo('library')" title="View Document Library">
+              <div>
+                <div class="stat-value" id="stat-total-docs">0</div>
+                <div class="stat-label">Total Documents</div>
+              </div>
+              <div class="stat-icon">📄</div>
+            </div>
+            <div class="stat-card card-interactive" onclick="navigateTo('suggestions')" title="View Pending AI Suggestions">
+              <div>
+                <div class="stat-value" id="stat-pending-suggestions">0</div>
+                <div class="stat-label">Pending Suggestions</div>
+              </div>
+              <div class="stat-icon">💡</div>
+            </div>
+            <div class="stat-card card-interactive" onclick="navigateTo('duplicates')" title="View Duplicate Alerts">
+              <div>
+                <div class="stat-value" id="stat-duplicates">0</div>
+                <div class="stat-label">Duplicate Alerts</div>
+              </div>
+              <div class="stat-icon">👥</div>
+            </div>
+            <div class="stat-card card-interactive" onclick="navigateTo('library')" title="View Document Library">
+              <div>
+                <div class="stat-value" id="stat-storage-used">0 MB</div>
+                <div class="stat-label">Total Storage</div>
+              </div>
+              <div class="stat-icon">💾</div>
+            </div>
+          </div>
+
+          <div class="dashboard-intelligence-grid">
+            <div class="card">
+              <div class="card-title">🧠 Needs Your Attention</div>
+              <div id="dashboard-intelligence-list" class="dashboard-attention-list">
+                <div class="empty-state" style="padding:16px 8px;">Loading intelligence...</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-title">🔐 Sharing & Security</div>
+              <div id="dashboard-security-summary" class="dashboard-security-summary">
+                <div><span>Sharing Groups</span><strong>0</strong></div>
+                <div><span>Locked Documents</span><strong>0</strong></div>
+                <div><span>Documents in Trash</span><strong>0</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions & Recent Documents Grid -->
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+            <div class="card">
+              <div class="card-title">
+                <span>Recent Uploads</span>
+                <button class="btn btn-secondary btn-sm" onclick="navigateTo('library')">View All</button>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Document</th>
+                      <th>Category</th>
+                      <th>Size</th>
+                      <th>Status</th>
+                      <th>Uploaded</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dashboard-recent-docs-tbody">
+                    <tr><td colspan="5" class="empty-state">Loading recent documents...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Quick Action Cards -->
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+              <div class="card" style="margin-bottom: 0;">
+                <div class="card-title">Quick Actions</div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                  <button class="btn btn-primary" onclick="navigateTo('upload')">📤 Upload New Document</button>
+                  <button class="btn btn-secondary" onclick="navigateTo('suggestions')">💡 Review AI Suggestions</button>
+                  <button class="btn btn-secondary" onclick="navigateTo('explorer')">🗺️ Open Explorer Graph</button>
+                </div>
+              </div>
+
+              <div class="card" style="margin-bottom: 0;">
+                <div class="card-title">System Status</div>
+                <div style="font-size: 12.5px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 8px;">
+                  <div style="display: flex; justify-content: space-between;">
+                    <span>Processing Engine:</span>
+                    <span class="badge badge-success">ONLINE</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between;">
+                    <span>OCR & Embedding:</span>
+                    <span class="badge badge-success">ACTIVE</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between;">
+                    <span>LSH Duplication Index:</span>
+                    <span class="badge badge-success">READY</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- DOCUMENT LIBRARY VIEW -->
+        <section id="view-library" class="page-view" style="display: none;">
+          <div class="page-header">
+            <div class="page-title">
+              <h2>Document Library</h2>
+              <p>Browse, filter, edit, and organize all your uploaded documents.</p>
+            </div>
+            <button class="btn btn-primary" onclick="navigateTo('upload')">📤 Upload Document</button>
+          </div>
+
+          <!-- Filter Bar -->
+          <div class="filter-bar">
+            <div class="filter-group">
+              <label>File Type:</label>
+              <select id="filter-file-type" class="form-control" style="width: 120px;" onchange="loadLibraryDocuments()">
+                <option value="">All Types</option>
+                <option value="pdf">PDF</option>
+                <option value="docx">Word (.docx)</option>
+                <option value="txt">Text (.txt)</option>
+                <option value="image">Image</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label>Category:</label>
+              <select id="filter-category" class="form-control" style="width: 140px;" onchange="loadLibraryDocuments()">
+                <option value="">All Categories</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label>Sensitivity:</label>
+              <select id="filter-sensitivity" class="form-control" style="width: 130px;" onchange="loadLibraryDocuments()">
+                <option value="">All Levels</option>
+                <option value="Public">Public</option>
+                <option value="Internal">Internal</option>
+                <option value="Confidential">Confidential</option>
+                <option value="Restricted">Restricted</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label>Folder:</label>
+              <select id="filter-folder" class="form-control" style="width: 140px;" onchange="loadLibraryDocuments()">
+                <option value="">All Folders</option>
+              </select>
+            </div>
+
+            <div class="filter-group" style="margin-left: auto;">
+              <label>Sort:</label>
+              <select id="filter-sort-by" class="form-control" style="width: 130px;" onchange="loadLibraryDocuments()">
+                <option value="uploaded_at">Uploaded Date</option>
+                <option value="original_name">Name</option>
+                <option value="size_bytes">File Size</option>
+              </select>
+              <select id="filter-sort-order" class="form-control" style="width: 90px;" onchange="loadLibraryDocuments()">
+                <option value="desc">Desc</option>
+                <option value="asc">Asc</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Documents Table Card -->
+          <div class="card">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Sensitivity</th>
+                    <th>Tags</th>
+                    <th>Version</th>
+                    <th>Status</th>
+                    <th>Uploaded</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="library-documents-tbody">
+                  <tr><td colspan="8" class="empty-state">Loading documents...</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination Controls -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 16px;">
+              <span id="library-pagination-info" style="font-size: 12.5px; color: var(--text-secondary);">Showing Page 1</span>
+              <div style="display: flex; gap: 8px;">
+                <button id="btn-page-prev" class="btn btn-secondary btn-sm" onclick="changeLibraryPage(-1)">Previous</button>
+                <button id="btn-page-next" class="btn btn-secondary btn-sm" onclick="changeLibraryPage(1)">Next</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- UPLOAD VIEW -->
+        <section id="view-upload" class="page-view" style="display: none;">
+          <div class="page-header">
+            <div class="page-title">
+              <h2>Upload Document</h2>
+              <p>Upload new files for automated OCR text extraction, categorisation, and duplication analysis.</p>
+            </div>
+          </div>
+
+          <div style="max-width: 650px; margin: 0 auto;">
+            <div class="card">
+              <form id="upload-form" onsubmit="handleDocumentUpload(event)">
+                <!-- Destination options -->
+                <div class="form-group">
+                  <label for="upload-target-folder">Target Folder (Optional)</label>
+                  <select id="upload-target-folder" class="form-control">
+                    <option value="">(Root / Unorganized)</option>
+                  </select>
+                </div>
+
+                <!-- File Dropzone -->
+                <div class="form-group">
+                  <label>Select File</label>
+                  <div class="dropzone" id="upload-dropzone" onclick="document.getElementById('upload-file-input').click()">
+                    <div class="dropzone-icon">📄</div>
+                    <div style="font-weight: 600; font-size: 14px;">Click to select file or drag & drop</div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Supports PDF, DOCX, PNG, JPG, TIFF</div>
+                    <input type="file" id="upload-file-input" style="display: none;" onchange="onFileSelected(this)">
+                  </div>
+                  <div id="selected-file-display" style="margin-top: 10px; font-weight: 600; color: var(--primary); display: none;"></div>
+                </div>
+
+                <!-- Progress indicator -->
+                <div id="upload-progress-box" style="display: none; margin-bottom: 16px;">
+                  <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                    <span>Uploading & Processing...</span>
+                    <span id="upload-status-percent">0%</span>
+                  </div>
+                  <div class="progress-bar-wrap">
+                    <div id="upload-progress-fill" class="progress-bar-fill"></div>
+                  </div>
+                </div>
+
+                <button type="submit" id="btn-submit-upload" class="btn btn-primary" style="width: 100%;">
+                  <span>Upload & Process Document</span>
+                </button>
+              </form>
+            </div>
+
+            <!-- Post-Upload Status Result Card -->
+            <div id="upload-result-card" class="card" style="display: none; border-left: 4px solid #10b981;">
+              <div class="card-title" style="color: #047857;">Processing Result</div>
+              <div id="upload-result-content"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- QUARANTINE VIEW -->
+        <section id="view-quarantine" class="page-view" style="display: none;">
+          <div class="page-header">
+            <div class="page-title">
+              <h2>🛡️ Untrusted File Quarantine</h2>
+              <p>Isolated files requiring security review before entering the normal IntelliDocs library.</p>
+            </div>
+            <button class="btn btn-secondary" onclick="loadQuarantinedDocuments()">🔄 Refresh List</button>
+          </div>
+
+          <div class="card">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Filename</th>
+                    <th>Type / Size</th>
+                    <th>Risk Score & Level</th>
+                    <th>Confidence</th>
+                    <th>Verdict & Status</th>
+                    <th>Uploaded</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="quarantine-tbody">
+                  <tr><td colspan="7" class="empty-state">Loading quarantined files...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- DOCUMENT DETAIL VIEW -->
+        <section id="view-detail" class="page-view" style="display: none;">
+          <div class="page-header">
+            <div>
+              <button class="btn btn-secondary btn-sm" onclick="navigateTo('library')" style="margin-bottom: 8px;">← Back to Library</button>
+              <div class="page-title">
+                <h2 id="doc-detail-name">Document Title</h2>
+                <p id="doc-detail-meta">Metadata details</p>
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <a id="btn-doc-download" class="btn btn-primary btn-sm" href="#" onclick="downloadCurrentDocument(event)">📥 Download File</a>
+              <button id="btn-doc-share" class="btn btn-secondary btn-sm" onclick="openShareModal(currentDetailUuid)">🤝 Share</button>
+              <button id="btn-doc-edit" class="btn btn-secondary btn-sm" onclick="openEditDocModal()">✏️ Edit Metadata</button>
+              <button id="btn-doc-version" class="btn btn-secondary btn-sm" onclick="openUploadVersionModal()">📜 New Version</button>
+              <button id="btn-doc-delete" class="btn btn-danger btn-sm" onclick="handleDeleteDoc()">🗑️ Move to Trash</button>
+            </div>
+          </div>
+
+          <!-- Document Detail Tabs -->
+          <div class="page-tabs">
+            <button class="tab-button active" onclick="switchDetailTab('overview')">📌 Overview</button>
+            <button class="tab-button" onclick="switchDetailTab('versions')">📜 Version History</button>
+            <button class="tab-button" onclick="switchDetailTab('related')">🔗 Related Documents</button>
+            <button class="tab-button" onclick="switchDetailTab('history')">🕒 Audit History</button>
+          </div>
+
+          <!-- Tab 1: Overview -->
+          <div id="tab-doc-overview" class="detail-tab-content">
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+
+              <!-- Left Column: AI Summary, Key Topics & Extracted Text -->
+              <div style="display: flex; flex-direction: column; gap: 20px;">
+
+                <!-- Summary Card -->
+                <div class="card">
+                  <div class="card-title" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+                    <span>✨ AI Summary</span>
+                    <button id="btn-refresh-ai-summary" class="btn btn-secondary btn-sm" onclick="refreshDocumentAiSummary()">↻ Refresh Summary</button>
+                  </div>
+                  <div id="doc-summary-content" style="font-size: 13.5px; line-height: 1.6; color: var(--text-primary); background: var(--bg-card); padding: 14px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); border-left: 4px solid var(--primary); min-height: 52px; white-space: pre-wrap; word-break: break-word;">
+                    <div class="empty-state" style="padding: 4px 0;">No summary available yet.</div>
+                  </div>
+                </div>
+
+                <!-- Key Topics Card -->
+                <div class="card">
+                  <div class="card-title">
+                    <span>🏷️ Key Topics</span>
+                  </div>
+                  <div id="doc-key-topics-container" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    <span class="empty-state" style="padding: 4px 0;">No key topics detected.</span>
+                  </div>
+                </div>
+
+                <!-- Extracted Text Content -->
+                <div class="card">
+                  <div class="card-title">
+                    <span>Extracted Text Content</span>
+                    <button class="btn btn-secondary btn-sm" onclick="copyExtractedText()">📋 Copy Text</button>
+                  </div>
+                  <div id="doc-extracted-text" style="white-space: pre-wrap; font-family: monospace; font-size: 12px; color: var(--text-primary); background: var(--bg-card); padding: 16px; border-radius: var(--radius-sm); max-height: 350px; min-height: 72px; overflow-y: auto; border: 1px solid var(--border-color); word-break: break-word;">
+                    No text content extracted.
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Right Column: Metadata & Tags -->
+              <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div class="card">
+                  <div class="card-title">Document Properties</div>
+                  <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
+                    <div><strong>UUID:</strong> <span id="meta-uuid" style="font-size: 11px; color: var(--text-muted);"></span></div>
+                    <div><strong>File Type:</strong> <span id="meta-filetype"></span></div>
+                    <div><strong>Category:</strong> <span id="meta-category"></span></div>
+                    <div><strong>Sensitivity:</strong> <span id="meta-sensitivity"></span></div>
+                    <div><strong>Page Count:</strong> <span id="meta-pages"></span></div>
+                    <div><strong>Word Count:</strong> <span id="meta-words"></span></div>
+                    <div><strong>Processing Status:</strong> <span id="meta-status"></span></div>
+                    <div><strong>SHA256 Hash:</strong> <span id="meta-hash" style="font-size: 11px; word-break: break-all; color: var(--text-muted);"></span></div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-title">
+                    <span>Tags</span>
+                    <button class="btn btn-secondary btn-sm" onclick="openAssignTagModal()">+ Assign Tag</button>
+                  </div>
+                  <div id="doc-tags-container" style="display: flex; flex-wrap: wrap; gap: 6px;">
+                    <span class="empty-state" style="padding: 0;">No tags assigned</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Tab 2: Versions -->
+          <div id="tab-doc-versions" class="detail-tab-content" style="display: none;">
+            <div class="card">
+              <div class="card-title">
+                <span>Version History</span>
+                <button class="btn btn-primary btn-sm" onclick="openUploadVersionModal()">+ Upload New Version</button>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Version</th>
+                      <th>File Name</th>
+                      <th>Size</th>
+                      <th>Uploaded Date</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="versions-tbody">
+                    <tr><td colspan="5" class="empty-state">Loading version history...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 3: Related Documents -->
+          <div id="tab-doc-related" class="detail-tab-content" style="display: none;">
+            <div class="card">
+              <div class="card-title">Related Documents</div>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Document</th>
+                      <th>Relation Type</th>
+                      <th>Confidence Score</th>
+                      <th>Detection Methods</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="related-tbody">
+                    <tr><td colspan="5" class="empty-state">Loading related documents...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 4: Audit History -->
+          <div id="tab-doc-history" class="detail-tab-content" style="display: none;">
+            <div class="card">
+              <div class="card-title">Chronological Audit Log Timeline</div>
+              <div id="history-timeline-container" class="timeline">
+                <div class="empty-state">Loading history...</div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- SEARCH VIEW -->
+        <section id="view-search" class="page-view" style="display: none;">
+          <div class="page-header">
+            <div class="page-title">
+              <h2>Search Results</h2>
+              <p id="search-query-subtitle">Keyword search across all documents</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div id="search-results-list" style="display: flex; flex-direction: column; gap: 16px;">
+              <div class="empty-state">Enter a search query in the search bar above to see results.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SUGGESTIONS VIEW -->
+        <section id="view-suggestions" class="page-view" style="display: none;">
+          <div class="page-header">
+            <div class="page-title">
+              <h2>Automated AI Suggestions</h2>
+              <p>Review the latest uploaded file's smart name and destination on the left, and multi-document folder groups on the right. Only filename and folder recommendations are shown; nothing changes without approval.</p>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="btn-re-evaluate-suggestions" onclick="triggerAnalyzeLibrarySuggestions()">⚡ Re-evaluate AI Insights</button>
+          </div>
+
+          <!-- Bulk Organization Summary & Toolbar Card -->
+          <div class="card" id="bulk-suggestions-summary-card" style="margin-bottom: 16px; display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <h4 style="margin: 0 0 4px 0; font-size: 1.05rem;" id="bulk-summary-title">Library Bulk Organization</h4>
+                <div style="font-size: 0.88rem; color: var(--text-muted, #666);" id="bulk-summary-details">
+                  Select suggestions below to accept or reject multiple proposals at once.
+                </div>
+              </div>
+              <div style="display: flex; gap: 10px; align-items: center;">
+                <label style="display: flex; align-items: center; gap: 6px; font-size: 0.9rem; cursor: pointer; user-select: none;">
+                  <input type="checkbox" id="select-all-suggestions-checkbox" onchange="toggleSelectAllSuggestions(this.checked)">
+                  <strong>Select All</strong>
+                </label>
+                <button class="btn btn-primary btn-sm" id="btn-bulk-accept" onclick="submitBulkAccept()" disabled>
+                  Accept Selected (<span id="bulk-accept-count">0</span>)
+                </button>
+                <button class="btn btn-secondary btn-sm" id="btn-bulk-reject" onclick="submitBulkReject()" disabled>
+                  Reject Selected (<span id="bulk-reject-count">0</span>)
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div id="suggestions-list-container" style="display: flex; flex-direction: column; gap: 16px;">
+              <div class="empty-state">Loading suggestions...</div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- DUPLICATES REVIEW VIEW -->
+        <section id="view-duplicates" class="page-view" style="display: none;">
+          <div class="page-header">
+            <div class="page-title">
+              <h2>Duplicate Review & Resolution</h2>
+              <p>Detect and resolve potential duplicate documents identified via LSH MinHash, Perceptual Hashing, and Cosine similarity.</p>
+            </div>
+          </div>
+
+          <div class="card" id="duplicate-alert-overview-card">
+            <div class="card-title">Library Duplicate Alerts</div>
+            <div id="duplicate-alerts-overview" class="empty-state">Checking duplicate alerts across your library...</div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Select Document to Check Duplicates</div>
+            <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+              <select id="duplicate-doc-select" class="form-control" style="max-width: 400px;">
+                <option value="">Select a document...</option>
+              </select>
+              <button class="btn btn-primary" onclick="inspectSelectedDuplicates()">Check Duplicates</button>
+            </div>
+          </div>
+
+          <div id="duplicate-results-panel" style="display: none;">
+            <div class="card">
+              <div class="card-title">Duplicate Candidates Found</div>
+              <div id="duplicate-candidates-list" style="display: flex; flex-direction: column; gap: 20px;"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- FOLDERS / CATEGORIES / TAGS ORGANIZATION VIEW -->
+        <section id="view-organization" class="page-view" style="display: none;">
+          <div class="page-header">
+            <div class="page-title">
+              <h2>Folders & Categories</h2>
+              <p>Categories describe what a document is; folders describe where it is stored. AI creates a category folder and useful subfolder only after you approve a document recommendation.</p>
+            </div>
+          </div>
+
+          <div class="page-tabs">
+            <button class="tab-button active" onclick="switchOrgTab('folders')">📁 Folders</button>
+            <button class="tab-button" onclick="switchOrgTab('categories')">🗂️ Categories</button>
+          </div>
+
+          <!-- Org Tab 1: Folders -->
+          <div id="org-tab-folders" class="org-tab-content">
+            <div class="card">
+              <div class="card-title">
+                <span>Folders</span>
+                <button class="btn btn-primary btn-sm" onclick="openCreateFolderModal()">+ Create Folder</button>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Folder / Path</th>
+                      <th>Document Count</th>
+                      <th>Created Date</th>
+                      <th style="text-align: right;">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="folders-tbody">
+                    <tr><td colspan="4" class="empty-state">Loading folders...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Org Tab 2: Categories -->
+          <div id="org-tab-categories" class="org-tab-content" style="display: none;">
+            <div class="card">
+              <div class="card-title">
+                <span>Document Categories</span>
+                <button class="btn btn-primary btn-sm" onclick="openCreateCategoryModal()">+ Create Category</button>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Category Name</th>
+                      <th>Description</th>
+                      <th>Type</th>
+                      <th style="text-align: right;">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="categories-tbody">
+                    <tr><td colspan="3" class="empty-state">Loading categories...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Org Tab 3: Tags -->
+          <div id="org-tab-tags" class="org-tab-content" style="display: none;">
+            <div class="card">
+              <div class="card-title">
+                <span>Tags List</span>
+                <button class="btn btn-primary btn-sm" onclick="openCreateTagModal()">+ Create Tag</button>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Tag</th>
+                      <th>Document Count</th>
+                      <th style="text-align:right;">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tags-tbody">
+                    <tr><td colspan="3" class="empty-state">Loading tags...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- RELATIONSHIP EXPLORER GRAPH VIEW -->
+        <section id="view-explorer" class="page-view" style="display: none;">
+          <div class="page-header">
+            <div class="page-title">
+              <h2>Relationship & History Explorer</h2>
+              <p>Discover documents, explore folder & category hierarchies, inspect AI relations, and trace chronological event timelines.</p>
+            </div>
+          </div>
+
+          <!-- Explorer Toolbar -->
+          <div class="explorer-toolbar">
+            <div class="explorer-search-group">
+              <input type="text" id="explorer-search-input" class="form-control" placeholder="Search documents, tags, folders, categories..." oninput="handleExplorerSearchInput(this.value)" autocomplete="off">
+              <div id="explorer-search-dropdown" class="autocomplete-dropdown"></div>
+            </div>
+
+            <div class="explorer-toolbar-actions">
+              <button class="btn btn-secondary btn-sm" onclick="explorerFitToView()" title="Fit graph to view">🔍 Fit to View</button>
+              <button class="btn btn-secondary btn-sm" onclick="explorerFocusSelected()" title="Focus selected node">🎯 Focus Selected</button>
+              <button class="btn btn-secondary btn-sm" onclick="explorerZoom(1.2)" title="Zoom in">+</button>
+              <button class="btn btn-secondary btn-sm" onclick="explorerZoom(0.8)" title="Zoom out">-</button>
+              <button class="btn btn-secondary btn-sm" onclick="explorerResetView()" title="Reset view">🔄 Reset</button>
+              <button class="btn btn-secondary btn-sm" onclick="loadExplorerGraph()" title="Refresh graph data">⚡ Refresh</button>
+
+              <label class="explorer-toggle-label" title="Subdue or hide nodes not connected to current selection">
+                <input type="checkbox" id="explorer-hide-unrelated-check" onchange="toggleExplorerHideUnrelated(this.checked)">
+                <span>Focus Neighborhood</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Relationship Filters -->
+          <div class="explorer-filter-bar">
+            <span style="font-size:12px; font-weight:600; color:var(--text-secondary);">Filter Relations:</span>
+            <button class="explorer-filter-chip active" data-filter="all" onclick="setExplorerRelationFilter('all', this)">All Relations</button>
+            <button class="explorer-filter-chip" data-filter="belongs_to" onclick="setExplorerRelationFilter('belongs_to', this)">📁 Folders</button>
+            <button class="explorer-filter-chip" data-filter="categorized_as" onclick="setExplorerRelationFilter('categorized_as', this)">🏷️ Categories</button>
+            <button class="explorer-filter-chip" data-filter="has_tag" onclick="setExplorerRelationFilter('has_tag', this)">🔖 Tags</button>
+            <button class="explorer-filter-chip" data-filter="version_of" onclick="setExplorerRelationFilter('version_of', this)">🌿 Versions</button>
+            <button class="explorer-filter-chip" data-filter="duplicate" onclick="setExplorerRelationFilter('duplicate', this)">👥 Duplicates</button>
+            <button class="explorer-filter-chip" data-filter="related" onclick="setExplorerRelationFilter('related', this)">🔗 Related</button>
+            <button class="explorer-filter-chip" data-filter="sharing" onclick="setExplorerRelationFilter('sharing', this)">🤝 Sharing</button>
+          </div>
+
+          <!-- Explorer Workspace (Canvas + Side Panel) -->
+          <div class="explorer-workspace">
+            <div class="explorer-canvas-container" id="explorer-canvas-container">
+              <canvas id="explorer-graph-canvas"></canvas>
+
+              <!-- Legend Overlay -->
+              <div class="explorer-legend-overlay">
+                <span class="legend-item"><span class="legend-dot dot-doc"></span> Document</span>
+                <span class="legend-item"><span class="legend-dot dot-folder"></span> Folder</span>
+                <span class="legend-item"><span class="legend-dot dot-category"></span> Category</span>
+                <span class="legend-item"><span class="legend-dot dot-tag"></span> Tag</span>
+                <span class="legend-item"><span class="legend-dot dot-duplicate"></span> Duplicate</span>
+                <span class="legend-item"><span class="legend-dot dot-version"></span> Version</span>
+                <span class="legend-item"><span class="legend-dot dot-user"></span> User</span>
+              </div>
+
+              <!-- Hover Tooltip Preview Card -->
+              <div id="explorer-hover-card" class="explorer-hover-card"></div>
+            </div>
+
+            <!-- Resizable divider between graph and details panel -->
+            <div id="explorer-panel-resizer" class="explorer-panel-resizer" role="separator" aria-label="Resize Explorer details panel" title="Drag to resize details panel"></div>
+
+            <!-- Collapsible Side Panel -->
+            <aside id="explorer-side-panel" class="explorer-side-panel">
+              <div class="side-panel-header">
+                <h3 id="explorer-panel-title">Item Details</h3>
+                <button class="btn-close-panel" onclick="toggleExplorerSidePanel(false)" title="Collapse Side Panel">✕</button>
+              </div>
+              <div class="side-panel-content" id="explorer-side-panel-body">
+                <div class="empty-state" style="padding:20px;">
+                  Select any document, folder, category, tag, or relationship edge in the graph to inspect metadata, AI summaries, connections, or event timelines.
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <!-- TRASH VIEW -->
+        <section id="view-trash" class="page-view" style="display: none;">
+          <div class="page-header">
+            <div class="page-title">
+              <h2>Trash</h2>
+              <p>Restore soft-deleted documents or permanently purge them from storage.</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Document</th>
+                    <th>Category</th>
+                    <th>Size</th>
+                    <th>Uploaded</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="trash-tbody">
+                  <tr><td colspan="5" class="empty-state">Loading trash...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- HELP & SUPPORT VIEW -->
+        <section id="view-help" class="page-view" style="display: none;">
+          <div class="page-header">
+            <div class="page-title">
+              <h2>🆘 Help & Support</h2>
+              <p>Explore IntelliDocs feature documentation, search FAQs, or submit a support request.</p>
+            </div>
+          </div>
+
+          <!-- Page Tabs -->
+          <div class="page-tabs" style="margin-bottom: 20px;">
+            <button class="tab-button active" id="help-tab-btn-faq" onclick="switchHelpTab('faq')">📖 Help Center & FAQs</button>
+            <button class="tab-button" id="help-tab-btn-contact" onclick="switchHelpTab('contact')">💬 Contact Support</button>
+            <button class="tab-button" id="help-tab-btn-history" onclick="switchHelpTab('history')">📜 My Support Requests</button>
+          </div>
+
+          <!-- TAB 1: Help Center & FAQs -->
+          <div id="help-tab-faq" class="help-tab-content">
+            <div class="card" style="margin-bottom: 20px;">
+              <div class="search-input-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="faq-search-input" class="form-control" placeholder="Search topics (e.g. upload, access lock, duplicate, explorer, OCR)..." oninput="filterFaqItems(this.value)">
+              </div>
+            </div>
+
+            <div id="faq-accordion-list" style="display: flex; flex-direction: column; gap: 12px;">
+              <!-- 1. Getting Started -->
+              <div class="card faq-item" data-keywords="getting started dashboard upload navigation features overview">
+                <div class="card-title clickable-row" onclick="toggleFaqAccordion(this)" style="margin-bottom:0; font-size:14.5px;">
+                  <span>🚀 1. Getting Started with IntelliDocs</span>
+                  <span>▼</span>
+                </div>
+                <div class="faq-answer" style="margin-top: 12px; font-size: 13px; color: var(--text-secondary); line-height: 1.5; display: none;">
+                  IntelliDocs is an AI-powered document management system. The top Dashboard provides instant system counters, security health summaries, quick actions, and recent activity. Use the left sidebar to navigate between Documents, Upload, AI Suggestions, Duplicates, Organization, Sharing & Groups, Explorer Graph, Trash, and Help & Support.
+                </div>
+              </div>
+
+              <!-- 2. Uploading Documents -->
+              <div class="card faq-item" data-keywords="uploading documents pdf docx text images ocr extraction processing file formats">
+                <div class="card-title clickable-row" onclick="toggleFaqAccordion(this)" style="margin-bottom:0; font-size:14.5px;">
+                  <span>📤 2. Uploading Documents & Automated Processing</span>
+                  <span>▼</span>
+                </div>
+                <div class="faq-answer" style="margin-top: 12px; font-size: 13px; color: var(--text-secondary); line-height: 1.5; display: none;">
+                  Navigate to <strong>Upload</strong> to drag-and-drop or select files (PDF, Word .docx, Text .txt, or scanned Images). IntelliDocs automatically extracts text, performs OCR for scanned images, classifies the content, detects sensitivity (Public, Internal, Confidential), and builds vector embeddings for semantic search.
+                </div>
+              </div>
+
+              <!-- 3. AI Classification & Organization Suggestions -->
+              <div class="card faq-item" data-keywords="ai classification suggestions categories sensitivity confidence review accept reject">
+                <div class="card-title clickable-row" onclick="toggleFaqAccordion(this)" style="margin-bottom:0; font-size:14.5px;">
+                  <span>💡 3. AI Classification & Suggestions Queue</span>
+                  <span>▼</span>
+                </div>
+                <div class="faq-answer" style="margin-top: 12px; font-size: 13px; color: var(--text-secondary); line-height: 1.5; display: none;">
+                  The AI Engine proposes document categorizations, subcategories, tags, folder placements, and sensitivity classifications. Open <strong>Suggestions</strong> to review proposals with AI confidence scores and reasoning evidence. You can batch Accept, Edit, Keep As-Is, or Reject proposals safely.
+                </div>
+              </div>
+
+              <!-- 4. Search, Semantic Search & Autocomplete -->
+              <div class="card faq-item" data-keywords="search semantic autocomplete query tags categories folder sensitivity filters">
+                <div class="card-title clickable-row" onclick="toggleFaqAccordion(this)" style="margin-bottom:0; font-size:14.5px;">
+                  <span>🔍 4. Search, Semantic Search & Autocomplete</span>
+                  <span>▼</span>
+                </div>
+                <div class="faq-answer" style="margin-top: 12px; font-size: 13px; color: var(--text-secondary); line-height: 1.5; display: none;">
+                  Use the top global search bar for instant autocomplete across filenames, tags, folders, and categories. In <strong>Documents</strong>, apply exact filter combinations (File Type, Category, Sensitivity, Folder). Semantic vector search understands conceptual meanings even when exact keywords differ.
+                </div>
+              </div>
+
+              <!-- 5. Duplicate Detection -->
+              <div class="card faq-item" data-keywords="duplicate detection sha256 perceptual hash lsh semantic similarity candidates review">
+                <div class="card-title clickable-row" onclick="toggleFaqAccordion(this)" style="margin-bottom:0; font-size:14.5px;">
+                  <span>👥 5. Duplicate & Near-Duplicate Detection</span>
+                  <span>▼</span>
+                </div>
+                <div class="faq-answer" style="margin-top: 12px; font-size: 13px; color: var(--text-secondary); line-height: 1.5; display: none;">
+                  IntelliDocs detects exact duplicates via SHA-256 hashes, visual image duplicates via perceptual hashing, and near-duplicates via LSH semantic similarity. Visit <strong>Duplicates</strong> to compare candidate files side-by-side and decide to Keep Both or Trash Candidate.
+                </div>
+              </div>
+
+              <!-- 6. Versions, Trash & Restore -->
+              <div class="card faq-item" data-keywords="versions parent version group trash restore soft delete purge history">
+                <div class="card-title clickable-row" onclick="toggleFaqAccordion(this)" style="margin-bottom:0; font-size:14.5px;">
+                  <span>🌿 6. Document Versioning, Trash & Recovery</span>
+                  <span>▼</span>
+                </div>
+                <div class="faq-answer" style="margin-top: 12px; font-size: 13px; color: var(--text-secondary); line-height: 1.5; display: none;">
+                  Uploading an updated document automatically creates a new version linked to the parent chain (v1, v2, etc.). Deleting a document moves it to <strong>Trash</strong> for soft-deletion recovery. From Trash, you can <strong>Restore</strong> items back to your library or <strong>Permanently Purge</strong> them.
+                </div>
+              </div>
+
+              <!-- 7. Sharing & Groups -->
+              <div class="card faq-item" data-keywords="sharing groups user permissions read append write revoke access control">
+                <div class="card-title clickable-row" onclick="toggleFaqAccordion(this)" style="margin-bottom:0; font-size:14.5px;">
+                  <span>🤝 7. Direct User Sharing & Group Access</span>
+                  <span>▼</span>
+                </div>
+                <div class="faq-answer" style="margin-top: 12px; font-size: 13px; color: var(--text-secondary); line-height: 1.5; display: none;">
+                  Share documents directly with registered users or custom groups with granular permissions: <code>READ</code> (view/download), <code>APPEND</code> (upload new versions), or <code>WRITE</code> (edit metadata/versions). Active shares can be managed or revoked anytime.
+                </div>
+              </div>
+
+              <!-- 8. Access Lock -->
+              <div class="card faq-item" data-keywords="access lock argon2 password secret key unlock token protection">
+                <div class="card-title clickable-row" onclick="toggleFaqAccordion(this)" style="margin-bottom:0; font-size:14.5px;">
+                  <span>🔒 8. Access Lock & Password Protection</span>
+                  <span>▼</span>
+                </div>
+                <div class="faq-answer" style="margin-top: 12px; font-size: 13px; color: var(--text-secondary); line-height: 1.5; display: none;">
+                  Protect highly sensitive documents with an Access Lock key. Keys are hashed securely with Argon2. Locked documents require entering the secret access key to generate a session unlock token (<code>X-Access-Lock-Token</code>) before viewing details or downloading.
+                </div>
+              </div>
+
+              <!-- 9. Relationship & History Explorer -->
+              <div class="card faq-item" data-keywords="relationship explorer graph nodes edges folders categories tags versions history timeline">
+                <div class="card-title clickable-row" onclick="toggleFaqAccordion(this)" style="margin-bottom:0; font-size:14.5px;">
+                  <span>🗺️ 9. Relationship & History Explorer</span>
+                  <span>▼</span>
+                </div>
+                <div class="faq-answer" style="margin-top: 12px; font-size: 13px; color: var(--text-secondary); line-height: 1.5; display: none;">
+                  The <strong>Explorer Graph</strong> visualizes node-edge relationships between documents, folders, categories, tags, versions, and shared users. Click nodes to inspect details, hover for rich AI summaries, select edges to see "Why Connected?", or view full chronological audit event timelines.
+                </div>
+              </div>
+
+              <!-- 10. Security & Privacy -->
+              <div class="card faq-item" data-keywords="security privacy multi-user isolation argon2 token encryption pii masking audit log">
+                <div class="card-title clickable-row" onclick="toggleFaqAccordion(this)" style="margin-bottom:0; font-size:14.5px;">
+                  <span>🛡️ 10. Multi-User Isolation, Security & Privacy</span>
+                  <span>▼</span>
+                </div>
+                <div class="faq-answer" style="margin-top: 12px; font-size: 13px; color: var(--text-secondary); line-height: 1.5; display: none;">
+                  IntelliDocs enforces strict server-side multi-user isolation. Users can only access documents they own or have explicit permission to read. Sensitive PII values are detected and classified automatically, and all major actions are recorded in immutable audit logs.
+                </div>
+              </div>
+
+              <!-- 11. Offline Capabilities & Network Dependencies -->
+              <div class="card faq-item" data-keywords="offline network local indexing ocr web search sync status">
+                <div class="card-title clickable-row" onclick="toggleFaqAccordion(this)" style="margin-bottom:0; font-size:14.5px;">
+                  <span>🌐 11. Offline Capabilities & Network Dependencies</span>
+                  <span>▼</span>
+                </div>
+                <div class="faq-answer" style="margin-top: 12px; font-size: 13px; color: var(--text-secondary); line-height: 1.5; display: none;">
+                  Core document storage, text extraction, OCR, duplicate indexing, access locks, and search operate locally on the server. Remote API integrations or web lookup features operate when network connectivity is available.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: Contact Support Form -->
+          <div id="help-tab-contact" class="help-tab-content" style="display: none;">
+            <div class="card" style="max-width: 740px;">
+              <div class="card-title">
+                <span>Send a Support Request</span>
+                <span class="badge badge-neutral" id="support-user-display">Logged In</span>
+              </div>
+
+              <form id="form-contact-support" onsubmit="submitContactSupport(event)">
+                <div class="form-group">
+                  <label class="form-label" style="font-weight:600;">Issue Category <span style="color:var(--danger-text);">*</span></label>
+                  <select id="support-issue-type" class="form-control" required>
+                    <option value="">Select category...</option>
+                    <option value="general">General Question</option>
+                    <option value="upload">Document Upload & Processing</option>
+                    <option value="ai_suggestions">AI Suggestions & Organization</option>
+                    <option value="search">Search & Autocomplete</option>
+                    <option value="duplicates">Duplicate Detection</option>
+                    <option value="sharing">Sharing & Groups</option>
+                    <option value="access_lock">Access Lock & Password Security</option>
+                    <option value="explorer">Relationship & History Explorer</option>
+                    <option value="security">Account & Security</option>
+                    <option value="bug">Report a Bug / Error</option>
+                    <option value="other">Other Request</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" style="font-weight:600;">Subject <span style="color:var(--danger-text);">*</span></label>
+                  <input type="text" id="support-subject" class="form-control" maxlength="200" placeholder="Brief description of issue" required minlength="3">
+                  <small class="text-muted" style="display:block; margin-top:4px;">Min 3, Max 200 characters</small>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" style="font-weight:600;">Optional Reference Document</label>
+                  <select id="support-doc-select" class="form-control">
+                    <option value="">None / General</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" style="font-weight:600;">Message Details <span style="color:var(--danger-text);">*</span></label>
+                  <textarea id="support-message" class="form-control" rows="6" maxlength="3000" minlength="10" placeholder="Describe what you were doing, expected behavior, and any error message..." oninput="updateSupportCharCount()" required></textarea>
+                  <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted); margin-top:4px;">
+                    <span>Please do not share private key passwords.</span>
+                    <span id="support-char-count">0 / 3000</span>
+                  </div>
+                </div>
+
+                <div style="display:flex; gap:12px; margin-top:20px;">
+                  <button type="submit" id="btn-submit-support" class="btn btn-primary">✉️ Submit Support Request</button>
+                  <button type="button" class="btn btn-secondary" onclick="resetSupportForm()">Clear Form</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- TAB 3: My Support Requests History -->
+          <div id="help-tab-history" class="help-tab-content" style="display: none;">
+            <div class="card">
+              <div class="card-title">
+                <span>Your Support Requests History</span>
+                <button class="btn btn-secondary btn-sm" onclick="loadUserSupportTickets()">🔄 Refresh List</button>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Ref ID</th>
+                      <th>Category</th>
+                      <th>Subject</th>
+                      <th>Submitted Date</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="support-tickets-tbody">
+                    <tr><td colspan="5" class="empty-state">Loading your support requests...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PROFILE VIEW -->
+        <section id="view-profile" class="page-view" style="display: none;">
+          <div class="page-header">
+            <div>
+              <button class="btn btn-secondary btn-sm" onclick="navigateTo('dashboard')" style="margin-bottom: 8px;">← Back to Dashboard</button>
+              <div class="page-title">
+                <h2>User Profile</h2>
+                <p>View your authenticated profile and account information.</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="max-width: 600px; margin: 0 auto;">
+            <div class="card">
+              <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
+                <div id="profile-avatar" style="width: 56px; height: 56px; border-radius: 50%; background: var(--primary-light, #e0e7ff); color: var(--primary, #4f46e5); font-size: 24px; font-weight: bold; display: flex; align-items: center; justify-content: center;">
+                  U
+                </div>
+                <div>
+                  <h3 id="profile-username" style="margin: 0; font-size: 18px; font-weight: 600;">Username</h3>
+                  <span id="profile-role-badge" class="badge badge-success" style="margin-top: 4px; display: inline-block;">USER</span>
+                </div>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 12px; font-size: 14px;">
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                  <span style="color: var(--text-secondary); font-weight: 500;">Username</span>
+                  <span id="profile-val-username" style="font-weight: 600;">-</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                  <span style="color: var(--text-secondary); font-weight: 500;">Email Address</span>
+                  <span id="profile-val-email" style="font-weight: 600;">-</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+                  <span style="color: var(--text-secondary); font-weight: 500;">Account Role</span>
+                  <span id="profile-val-role" style="font-weight: 600;">-</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 10px 0;">
+                  <span style="color: var(--text-secondary); font-weight: 500;">Account Creation Date</span>
+                  <span id="profile-val-created" style="font-weight: 600;">-</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SETTINGS VIEW -->
+        <section id="view-settings" class="page-view" style="display: none;">
+          <div class="page-header">
+            <div class="page-title">
+              <h2>Settings</h2>
+              <p>Manage your account settings, security preferences, active sessions, and notifications.</p>
+            </div>
+          </div>
+
+          <div class="page-tabs">
+            <button class="tab-button active" id="tab-btn-settings-account" onclick="switchSettingsTab('account')">👤 Account</button>
+            <button class="tab-button" id="tab-btn-settings-security" onclick="switchSettingsTab('security')">🔒 Security & Sessions</button>
+            <button class="tab-button" id="tab-btn-settings-notifications" onclick="switchSettingsTab('notifications')">🔔 Notifications</button>
+          </div>
+
+          <!-- Tab 1: Account -->
+          <div id="settings-tab-account" class="settings-tab-content">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+              <div class="card">
+                <div class="card-title">Account Information</div>
+                <div style="display: flex; flex-direction: column; gap: 12px; font-size: 14px;">
+                  <div><strong>Username:</strong> <span id="settings-acc-username">-</span></div>
+                  <div><strong>Email:</strong> <span id="settings-acc-email">-</span></div>
+                  <div><strong>Role:</strong> <span id="settings-acc-role">-</span></div>
+                  <div style="margin-top: 12px;">
+                    <button class="btn btn-secondary btn-sm" onclick="navigateTo('profile')">View Full Profile →</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-title">Appearance & Theme</div>
+                <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13px;">
+                  <p style="color: var(--text-secondary);">Customize the look and feel of IntelliDocs. Select your preferred theme mode:</p>
+                  <div class="form-group">
+                    <label for="settings-theme-select">Interface Theme</label>
+                    <select id="settings-theme-select" class="form-control" onchange="setTheme(this.value)">
+                      <option value="light">☀️ Light Theme</option>
+                      <option value="dark">🌙 Dark Theme</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" style="grid-column: span 2;">
+                <div class="card-title">Change Password</div>
+                <form id="form-settings-change-password" onsubmit="submitSettingsChangePassword(event)">
+                  <div class="form-group">
+                    <label>Current Password</label>
+                    <input type="password" id="settings-curr-pwd" class="form-control" required placeholder="Enter current password">
+                  </div>
+                  <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" id="settings-new-pwd" class="form-control" required minlength="10" placeholder="At least 10 characters">
+                  </div>
+                  <button type="submit" class="btn btn-primary" style="width: 100%;">Update Password</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 2: Security & MFA -->
+          <div id="settings-tab-security" class="settings-tab-content" style="display: none;">
+            <div style="display: flex; flex-direction: column; gap: 24px;">
+
+              <!-- MFA Card -->
+              <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center;" class="card-title">
+                  <span>Two-Factor Authentication (TOTP MFA)</span>
+                  <span id="settings-mfa-badge" class="badge">Checking...</span>
+                </div>
+                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+                  Add an extra layer of security using standard authenticator apps (Google Authenticator, Authy, 1Password).
+                </p>
+
+                <div id="settings-mfa-actions" style="display: flex; gap: 12px;">
+                  <button id="btn-mfa-enable" class="btn btn-primary btn-sm" onclick="openMfaSetupModal()">🔒 Enable Two-Factor Auth</button>
+                  <button id="btn-mfa-disable" class="btn btn-danger btn-sm" style="display: none;" onclick="openMfaDisableModal()">🔓 Disable MFA</button>
+                  <button id="btn-mfa-regen" class="btn btn-secondary btn-sm" style="display: none;" onclick="openMfaRegenModal()">🔑 Regenerate Recovery Codes</button>
+                </div>
+
+                <div id="settings-mfa-recovery-info" style="margin-top: 12px; font-size: 12px; color: var(--text-muted); display: none;">
+                  Remaining single-use recovery codes: <strong id="settings-mfa-codes-count">0</strong>
+                </div>
+              </div>
+
+              <!-- Active Sessions Card -->
+              <div class="card">
+                <div class="card-title">
+                  <span>Active Sessions</span>
+                  <button class="btn btn-secondary btn-sm" onclick="loadActiveSessions()">🔄 Refresh Sessions</button>
+                </div>
+                <div class="table-responsive">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>IP Address</th>
+                        <th>Issued At</th>
+                        <th>Expires At</th>
+                        <th>Current Session</th>
+                        <th style="text-align: right;">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="active-sessions-tbody">
+                      <tr><td colspan="5" class="empty-state">Loading active sessions...</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Tab 3: Notifications -->
+          <div id="settings-tab-notifications" class="settings-tab-content" style="display: none;">
+            <div class="card" style="max-width: 600px;">
+              <div class="card-title">Notification Preferences</div>
+              <form id="form-notification-settings" onsubmit="submitNotificationSettings(event)">
+                <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px;">
+                  <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" id="notif-email" checked>
+                    <span>Email Notifications for Critical Events</span>
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" id="notif-inapp" checked>
+                    <span>In-App Notification Bell Alerts</span>
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" id="notif-suggestions" checked>
+                    <span>Document AI Categorization Suggestions</span>
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" id="notif-duplicates" checked>
+                    <span>Duplicate Document Alerts</span>
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" id="notif-security" checked>
+                    <span>Security & Login Alerts</span>
+                  </label>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Preferences</button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- GROUPS VIEW -->
+        <section id="view-groups" class="page-view" style="display: none;">
+          <div class="page-header">
+            <div class="page-title">
+              <h2>Sharing &amp; Groups</h2>
+              <p>Manage your groups and keep track of documents shared with you or by you.</p>
+            </div>
+            <button class="btn btn-primary" onclick="openModal('modal-group-create')">+ Create Group</button>
+          </div>
+
+          <div class="sharing-workspace">
+            <section class="card sharing-workspace-panel">
+              <div class="sharing-panel-heading">
+                <div>
+                  <h3>👥 Groups</h3>
+                  <p>Create multiple groups for different teams, projects, and family members. Each group supports up to 7 members.</p>
+                </div>
+              </div>
+              <div id="groups-list-container" class="sharing-groups-list">
+                <div class="empty-state">Loading groups...</div>
+              </div>
+            </section>
+
+            <section class="card sharing-workspace-panel">
+              <div class="sharing-panel-heading">
+                <div>
+                  <h3>📂 Shared Documents</h3>
+                  <p>Review documents shared with you and documents you have shared with others.</p>
+                </div>
+              </div>
+              <div class="shared-document-tabs" role="tablist" aria-label="Shared documents">
+                <button type="button" id="shared-doc-tab-received" class="btn btn-primary btn-sm" role="tab" aria-selected="true" onclick="setSharedDocumentsTab('received')">Received by Me</button>
+                <button type="button" id="shared-doc-tab-sent" class="btn btn-secondary btn-sm" role="tab" aria-selected="false" onclick="setSharedDocumentsTab('sent')">Shared by Me</button>
+              </div>
+              <div class="shared-documents-toolbar">
+                <input type="search" id="shared-documents-search" class="form-control shared-documents-search" placeholder="Search documents, people, or groups..." aria-label="Search shared documents" oninput="handleSharedDocumentsSearch(this.value)">
+                <span id="shared-documents-count" class="shared-documents-count" aria-live="polite">Loading...</span>
+              </div>
+              <div class="shared-security-note">
+                <strong>Security status:</strong> reflects the original upload security gate for this shared document, not a new scan or a guarantee that a file is harmless. Missing assessments are shown as <em>Not assessed</em>.
+              </div>
+              <div id="shared-documents-list-container" class="shared-documents-list" aria-live="polite">
+                <div class="empty-state">Loading shared documents...</div>
+              </div>
+              <div id="shared-documents-pagination" class="shared-documents-pagination" aria-live="polite"></div>
+            </section>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- MODALS -->
+
+  <!-- Modal: MFA Verification Challenge during Login -->
+  <div id="modal-mfa-verify-login" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Two-Factor Authentication Required</h3>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+          Enter the 6-digit code from your authenticator app or a single-use recovery code.
+        </p>
+        <form id="form-mfa-verify-login" onsubmit="submitMfaVerifyLogin(event)">
+          <div class="form-group">
+            <label>6-Digit Authenticator Code</label>
+            <input type="text" id="mfa-login-code" class="form-control" placeholder="123456" autofocus autocomplete="off">
+          </div>
+          <div style="text-align: center; margin: 10px 0; font-size: 12px; color: var(--text-muted);">- OR -</div>
+          <div class="form-group">
+            <label>Single-Use Recovery Code</label>
+            <input type="text" id="mfa-login-recovery-code" class="form-control" placeholder="XXXX-XXXX" autocomplete="off">
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Verify & Sign In</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: MFA Setup Enrollment -->
+  <div id="modal-mfa-setup" class="modal-backdrop">
+    <div class="modal-card" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3>Enable Two-Factor Authentication</h3>
+        <button class="modal-close-btn" onclick="closeModal('modal-mfa-setup')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Step 1: Re-auth Password -->
+        <div id="mfa-setup-step-1">
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+            Please re-enter your password to confirm enrollment.
+          </p>
+          <form id="form-mfa-setup-init" onsubmit="submitMfaSetupInitiate(event)">
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" id="mfa-setup-pwd" class="form-control" required placeholder="Enter current password">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Continue →</button>
+          </form>
+        </div>
+
+        <!-- Step 2: Scan QR & Confirm -->
+        <div id="mfa-setup-step-2" style="display: none; text-align: center;">
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+            Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.):
+          </p>
+          <div style="margin: 12px 0;">
+            <img id="mfa-qr-img" src="" alt="QR Code" style="width: 180px; height: 180px; border: 1px solid var(--border-color); border-radius: 8px;">
+          </div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px; word-break: break-all;">
+            Manual Entry Secret: <strong id="mfa-secret-text" style="color: var(--text-color);"></strong>
+          </div>
+          <form id="form-mfa-setup-confirm" onsubmit="submitMfaSetupConfirm(event)">
+            <div class="form-group" style="text-align: left;">
+              <label>Enter 6-Digit Code from App</label>
+              <input type="text" id="mfa-confirm-code" class="form-control" required placeholder="123456" maxlength="6" autocomplete="off">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Verify & Enable MFA</button>
+          </form>
+        </div>
+
+        <!-- Step 3: Show Recovery Codes -->
+        <div id="mfa-setup-step-3" style="display: none;">
+          <div class="alert alert-warning" style="margin-bottom: 16px; font-size: 13px;">
+            ⚠️ Save these single-use recovery codes in a safe place. They will ONLY be shown once!
+          </div>
+          <div id="mfa-recovery-codes-box" style="font-family: monospace; background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px;"></div>
+          <button class="btn btn-primary" style="width: 100%;" onclick="closeModal('modal-mfa-setup'); loadMfaStatus();">I Have Saved My Recovery Codes</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Disable MFA -->
+  <div id="modal-mfa-disable" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Disable Two-Factor Authentication</h3>
+        <button class="modal-close-btn" onclick="closeModal('modal-mfa-disable')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+          Re-enter your password and current 6-digit TOTP code to disable MFA and revoke active sessions.
+        </p>
+        <form id="form-mfa-disable" onsubmit="submitMfaDisable(event)">
+          <div class="form-group">
+            <label>Current Password</label>
+            <input type="password" id="mfa-disable-pwd" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>6-Digit Code or Recovery Code</label>
+            <input type="text" id="mfa-disable-code" class="form-control" required placeholder="123456 or XXXX-XXXX">
+          </div>
+          <button type="submit" class="btn btn-danger" style="width: 100%;">Disable MFA</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Regenerate Recovery Codes -->
+  <div id="modal-mfa-regen" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Regenerate Recovery Codes</h3>
+        <button class="modal-close-btn" onclick="closeModal('modal-mfa-regen')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="mfa-regen-form-box">
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+            Generating new recovery codes invalidates all existing recovery codes.
+          </p>
+          <form id="form-mfa-regen" onsubmit="submitMfaRegen(event)">
+            <div class="form-group">
+              <label>Current Password</label>
+              <input type="password" id="mfa-regen-pwd" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>6-Digit Code</label>
+              <input type="text" id="mfa-regen-code" class="form-control" required placeholder="123456">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Regenerate Codes</button>
+          </form>
+        </div>
+
+        <div id="mfa-regen-result-box" style="display: none;">
+          <div class="alert alert-warning" style="margin-bottom: 16px; font-size: 13px;">
+            ⚠️ Save these new single-use recovery codes in a safe place.
+          </div>
+          <div id="mfa-new-recovery-codes-box" style="font-family: monospace; background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px;"></div>
+          <button class="btn btn-primary" style="width: 100%;" onclick="closeModal('modal-mfa-regen'); loadMfaStatus();">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Edit Document Metadata -->
+  <div id="modal-edit-doc" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Edit Document Metadata</h3>
+        <button class="modal-close-btn" onclick="closeModal('modal-edit-doc')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-edit-doc" onsubmit="submitEditDoc(event)">
+          <div class="form-group">
+            <label>Display Name</label>
+            <input type="text" id="edit-display-name" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <select id="edit-category" class="form-control"></select>
+          </div>
+          <div class="form-group">
+            <label>Sensitivity Level</label>
+            <select id="edit-sensitivity" class="form-control">
+              <option value="Public">Public</option>
+              <option value="Internal">Internal</option>
+              <option value="Confidential">Confidential</option>
+              <option value="Restricted">Restricted</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Save Changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Upload New Version -->
+  <div id="modal-upload-version" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Upload New Version</h3>
+        <button class="modal-close-btn" onclick="closeModal('modal-upload-version')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-upload-version" onsubmit="submitUploadVersion(event)">
+          <div class="form-group">
+            <label>Select File</label>
+            <input type="file" id="version-file-input" class="form-control" required>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Upload Version</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Assign Tag to Document -->
+  <div id="modal-assign-tag" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Assign Tags to Document</h3>
+        <button class="modal-close-btn" onclick="closeModal('modal-assign-tag')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="assign-tags-checklist" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;"></div>
+        <button class="btn btn-primary" style="width: 100%;" onclick="submitAssignTags()">Save Tag Selection</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Create Tag -->
+  <div id="modal-create-tag" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Create New Tag</h3>
+        <button class="modal-close-btn" onclick="closeModal('modal-create-tag')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-create-tag" onsubmit="submitCreateTag(event)">
+          <div class="form-group">
+            <label>Tag Name</label>
+            <input type="text" id="create-tag-name" class="form-control" required placeholder="e.g. Invoice-2026">
+          </div>
+          <div class="form-group">
+            <label>Color</label>
+            <input type="color" id="create-tag-color" class="form-control" value="#6366f1" style="height: 40px; padding: 2px;">
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Create Tag</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Create Category -->
+  <div id="modal-create-category" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Create Custom Category</h3>
+        <button class="modal-close-btn" onclick="closeModal('modal-create-category')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-create-category" onsubmit="submitCreateCategory(event)">
+          <div class="form-group">
+            <label>Category Name</label>
+            <input type="text" id="create-cat-name" class="form-control" required placeholder="e.g. Legal Contracts">
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <input type="text" id="create-cat-desc" class="form-control" placeholder="Optional description">
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Create Category</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Create Folder -->
+  <div id="modal-create-folder" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Create Folder</h3>
+        <button class="modal-close-btn" onclick="closeModal('modal-create-folder')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-create-folder" onsubmit="submitCreateFolder(event)">
+          <div class="form-group">
+            <label>Folder Name</label>
+            <input type="text" id="create-folder-name" class="form-control" required placeholder="e.g. Q3 Financial Reports">
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Create Folder</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Share Document -->
+  <div id="modal-share" class="modal-backdrop">
+    <div class="modal-card" style="max-width: 620px;">
+      <div class="modal-header">
+        <h3>Share Document & Access Control</h3>
+        <button class="modal-close-btn" onclick="closeModal('modal-share')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="page-tabs" style="margin-bottom: 16px;">
+          <button id="tab-btn-share-users" class="tab-button active" onclick="switchShareTab('users')">Share with People</button>
+          <button id="tab-btn-share-group" class="tab-button" onclick="switchShareTab('group')">Share with Group</button>
+          <button id="tab-btn-share-active" class="tab-button" onclick="switchShareTab('active')">Active Access</button>
+          <button id="tab-btn-share-lock" class="tab-button" onclick="switchShareTab('lock')">🔒 Access Lock</button>
+        </div>
+
+        <!-- Tab 1: Share with People -->
+        <div id="tab-share-users" class="share-tab-content">
+          <form id="form-share-users" onsubmit="handleShareSubmit(event)">
+            <div class="form-group" style="position: relative;">
+              <label for="share-user-search-input">Search Registered Users</label>
+              <div class="search-input-wrap">
+                <input type="text" id="share-user-search-input" class="form-control" placeholder="Search username or email..." oninput="handleShareUserSearch(this.value)" autocomplete="off">
+              </div>
+              <div id="share-user-search-dropdown" class="autocomplete-dropdown" style="display: none;"></div>
+            </div>
+
+            <div class="form-group">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <label style="margin:0;">Selected Recipients</label>
+                <span id="share-recipient-count" style="font-size:12px; font-weight:600; color:var(--primary);">Selected: 0/5</span>
+              </div>
+              <div id="share-selected-recipients-box" style="display:flex; flex-wrap:wrap; gap:6px; min-height:42px; padding:6px; background:#f8fafc; border:1px dashed var(--border-color); border-radius:var(--radius-sm); align-items:center;">
+                <span class="text-muted" style="font-size:12px; padding:4px;" id="share-recipients-placeholder">No recipients selected yet. Search and select users above.</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="share-permission-select">Permission Level</label>
+              <select id="share-permission-select" class="form-control">
+                <option value="READ">READ — View & Download only (No edits, no new versions)</option>
+                <option value="APPEND">APPEND — View, Download & Upload new versions</option>
+                <option value="WRITE">WRITE — View, Download, Upload versions & Edit metadata</option>
+              </select>
+            </div>
+            <div class="share-protection-option">
+              <label for="share-protect-with-key">
+                <input type="checkbox" id="share-protect-with-key">
+                <span><strong>Require a recipient-specific Share Key</strong><small>Each recipient gets a separate key shown once after sharing. Send it to them securely.</small></span>
+              </label>
+            </div>
+            <button type="submit" id="btn-submit-share-users" class="btn btn-primary" style="width: 100%;" disabled>Share Document</button>
+            <div class="share-protection-option share-access-lock-note">
+              <div>
+                <strong style="font-size:13px;">🔐 Document-wide Access Lock</strong>
+                <small>Extra unlock step for non-owner recipients, including direct and group access. This is separate from a recipient-specific Share Key.</small>
+              </div>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="switchShareTab('lock')">Configure</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Tab 2: Share with Group -->
+        <div id="tab-share-group" class="share-tab-content" style="display: none;">
+          <form onsubmit="handleGroupShareSubmit(event)">
+            <div class="form-group">
+              <label>Select Group</label>
+              <select id="share-group-select" class="form-control">
+                <option value="">Select a group...</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Permission Level</label>
+              <select id="share-group-permission-select" class="form-control">
+                <option value="READ">READ — View & Download only</option>
+                <option value="APPEND">APPEND — View, Download & Upload new versions</option>
+                <option value="WRITE">WRITE — View, Download, Upload versions & Edit metadata</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Grant Group Access</button>
+          </form>
+        </div>
+
+        <!-- Tab 3: Active Access List -->
+        <div id="tab-share-active" class="share-tab-content" style="display: none;">
+          <div class="table-responsive">
+            <table class="data-table" style="font-size: 12px;">
+              <thead>
+                <tr>
+                  <th>Recipient / Group</th>
+                  <th>Permission</th>
+                  <th>Source</th>
+                  <th style="text-align: right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="active-shares-tbody">
+                <tr><td colspan="4" class="empty-state">Loading active shares...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab 4: Access Lock Settings -->
+        <div id="tab-share-lock" class="share-tab-content" style="display: none;">
+          <div id="access-lock-status-box" style="margin-bottom: 16px; padding: 12px; background: #f8fafc; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 13px;">
+            Checking lock status...
+          </div>
+
+          <form id="form-enable-lock" onsubmit="handleEnableAccessLock(event)">
+            <div class="form-group">
+              <label>Access Key Secret</label>
+              <input type="password" id="lock-key-input" class="form-control" placeholder="Enter secret key (min 4 chars)" required minlength="4">
+            </div>
+            <div class="form-group">
+              <label>Confirm Access Key</label>
+              <input type="password" id="lock-key-confirm-input" class="form-control" placeholder="Confirm secret key" required minlength="4">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Set Document Access Lock</button>
+          </form>
+
+          <div id="lock-actions-box" style="display: none; margin-top: 12px;">
+            <div style="padding:10px 12px; background:#f8fafc; border:1px solid var(--border-color); border-radius:var(--radius-sm); margin-bottom:10px;">
+              <div style="font-size:12px; color:var(--text-muted);">Changing the key invalidates the previous unlock authorization.</div>
+            </div>
+            <form id="form-change-lock" onsubmit="handleChangeAccessLock(event)">
+              <div class="form-group">
+                <label>Current Access Key</label>
+                <input type="password" id="lock-current-key-input" class="form-control" placeholder="Enter current key" autocomplete="off" required>
+              </div>
+              <div class="form-group">
+                <label>New Access Key</label>
+                <input type="password" id="lock-new-key-input" class="form-control" placeholder="Enter new key (min 4 chars)" minlength="4" autocomplete="new-password" required>
+              </div>
+              <div class="form-group">
+                <label>Confirm New Access Key</label>
+                <input type="password" id="lock-new-key-confirm-input" class="form-control" placeholder="Confirm new key" minlength="4" autocomplete="new-password" required>
+              </div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button type="submit" class="btn btn-secondary btn-sm">Change Access Key</button>
+                <button type="button" class="btn btn-danger btn-sm" onclick="handleRemoveAccessLock()">Remove Access Lock</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Share an owned document with a group -->
+  <div id="modal-group-share-document" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="group-share-picker-title">Share a Document with Group</h3>
+        <button class="modal-close-btn" type="button" onclick="closeModal('modal-group-share-document')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form onsubmit="submitGroupDocumentPicker(event)">
+          <div class="form-group">
+            <label for="group-share-document-select">Document you own</label>
+            <select id="group-share-document-select" class="form-control" required>
+              <option value="">Loading your documents...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="group-share-document-permission">Group permission</label>
+            <select id="group-share-document-permission" class="form-control">
+              <option value="READ">READ — View and download</option>
+              <option value="APPEND">APPEND — View/download and upload versions</option>
+              <option value="WRITE">WRITE — View/download, upload versions, and edit metadata</option>
+            </select>
+          </div>
+          <p id="group-share-picker-hint" class="text-muted" style="font-size:12px; line-height:1.5;">Select a document you own and choose the access permission.</p>
+          <div style="display:flex; gap:8px; justify-content:flex-end;">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('modal-group-share-document')">Cancel</button>
+            <button type="submit" id="group-share-picker-submit" class="btn btn-primary">Share with Group</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: One-time recipient Share Keys -->
+  <div id="modal-share-key-issued" class="modal-backdrop">
+    <div class="modal-card share-key-issued-modal">
+      <div class="modal-header">
+        <h3>🔑 Share Keys Created</h3>
+        <button class="modal-close-btn" onclick="closeIssuedShareKeysModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted" style="font-size:13px;">These recipient-specific keys are shown only once. Copy each key and share it securely with the matching recipient.</p>
+        <div id="issued-share-keys-list" class="issued-share-keys-list"></div>
+        <button type="button" class="btn btn-primary" style="width:100%; margin-top:12px;" onclick="closeIssuedShareKeysModal()">I have saved the keys</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Verify a Share Key for a received document -->
+  <div id="modal-share-key-verify" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>🔐 Verify Share Key</h3>
+        <button class="modal-close-btn" onclick="closeModal('modal-share-key-verify')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted" style="font-size:13px;">Enter the separate Share Key provided by the document owner. This does not replace a document-wide Access Lock.</p>
+        <form onsubmit="submitReceivedShareKey(event)">
+          <div class="form-group">
+            <label for="received-share-key-input">Share Key</label>
+            <input type="password" id="received-share-key-input" class="form-control" autocomplete="off" required>
+          </div>
+          <button type="submit" id="received-share-key-submit" class="btn btn-primary" style="width:100%;">Verify &amp; Continue</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Review source security assessment before activating a received share -->
+  <div id="modal-share-security-review" class="modal-backdrop">
+    <div class="modal-card share-security-review-modal" style="max-width: 760px; max-height: 90vh; overflow: auto;">
+      <div class="modal-header">
+        <h3>🛡️ Shared Document Security Review</h3>
+        <button type="button" class="modal-close-btn" onclick="cancelReceivedShareActivation()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Review the assessment from the original upload before activating access. Pending shares remain outside your personal Documents library and Explorer Graph.</p>
+        <div id="share-security-report-content"></div>
+        <p id="share-activation-state-message" class="shared-document-warning" role="status"></p>
+        <div id="share-limited-ack-wrap" style="display: none; margin: 12px 0;">
+          <label style="display:flex; gap:8px; align-items:flex-start;">
+            <input type="checkbox" id="share-limited-ack" onchange="updateShareActivationButtonState()" style="margin-top:4px;">
+            <span>I understand the malware scanner was unavailable or partial, and I accept this remaining assessment limitation.</span>
+          </label>
+        </div>
+        <div class="shared-document-actions" style="justify-content:flex-end; margin-top:16px;">
+          <button type="button" id="received-share-unlock-for-activation" class="btn btn-secondary" onclick="promptShareActivationUnlock()" style="display:none;">🔑 Unlock to Activate</button>
+          <button type="button" class="btn btn-secondary" onclick="cancelReceivedShareActivation()">Cancel</button>
+          <button type="button" id="received-share-activate-submit" class="btn btn-primary" onclick="submitReceivedShareActivation()" disabled>Activate Access &amp; Open</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Unlock Access Locked Document -->
+  <div id="modal-access-lock-unlock" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>🔒 Document Access Key Required</h3>
+        <button class="modal-close-btn" onclick="closeModal('modal-access-lock-unlock')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+          This document is protected with an Access Lock. Enter the secret key provided by the document owner to view and access content.
+        </p>
+        <form onsubmit="submitUnlockDocument(event)">
+          <div class="form-group">
+            <label>Access Key</label>
+            <input type="password" id="unlock-key-input" class="form-control" placeholder="Enter secret access key" required autofocus>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Unlock Document</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Create Group -->
+  <div id="modal-group-create" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Create Sharing Group</h3>
+        <button class="modal-close-btn" onclick="closeModal('modal-group-create')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form onsubmit="submitCreateGroup(event)">
+          <div class="form-group">
+            <label>Group Name</label>
+            <input type="text" id="create-group-name-input" class="form-control" placeholder="e.g. Project Team / Family" required>
+          </div>
+          <div class="form-group">
+            <label>Initial Members (Usernames or Emails)</label>
+            <input type="text" id="create-group-members-input" class="form-control" placeholder="Comma-separated (max 6 additional members)">
+            <small class="text-muted" style="display:block; margin-top:4px;">Groups can contain up to 7 members total.</small>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Create Group</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Add Group Member -->
+  <div id="modal-group-add-member" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Add Member to Group</h3>
+        <button class="modal-close-btn" onclick="closeModal('modal-group-add-member')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form onsubmit="submitAddGroupMember(event)">
+          <div class="form-group">
+            <label>Username or Email</label>
+            <input type="text" id="add-group-member-input" class="form-control" placeholder="Enter username or email" required>
+            <small class="text-muted" style="display:block; margin-top:4px;">Groups can contain up to 7 members.</small>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Add Member</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Edit Document Organization Metadata -->
+  <div id="modal-edit-doc-org" class="modal-backdrop">
+    <div class="modal-card" style="max-width: 540px;">
+      <div class="modal-header">
+        <h3>✏️ Organize Document</h3>
+        <button class="modal-close-btn" onclick="closeModal('modal-edit-doc-org')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form onsubmit="submitEditDocOrg(event)">
+          <div class="form-group">
+            <label>Logical Display Title</label>
+            <input type="text" id="edit-doc-display-name" class="form-control" placeholder="Enter title" required>
+          </div>
+          <div class="form-group">
+            <label>Folder Location</label>
+            <select id="edit-doc-folder-select" class="form-control">
+              <option value="">No Folder (Root)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <select id="edit-doc-category-select" class="form-control">
+              <option value="">Uncategorized</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Subcategory</label>
+            <input type="text" id="edit-doc-subcategory-input" class="form-control" placeholder="e.g. Invoices, Contracts, Assignments">
+          </div>
+          <div class="form-group">
+            <label>Sensitivity Classification</label>
+            <select id="edit-doc-sensitivity-select" class="form-control">
+              <option value="public">Public</option>
+              <option value="internal">Internal</option>
+              <option value="confidential">Confidential</option>
+              <option value="restricted">Restricted</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Save Organization Changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: File Security Intelligence Report -->
+  <div id="modal-security-report" class="modal-backdrop">
+    <div class="modal-card" style="max-width: 720px; width: 90%;">
+      <div class="modal-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+        <div>
+          <h3 style="margin: 0; display: flex; align-items: center; gap: 8px;">
+            <span>🛡️</span> Security Assessment Report
+          </h3>
+          <span id="sec-report-filename" style="font-size: 12px; color: var(--text-muted); font-weight: normal;"></span>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('modal-security-report')">&times;</button>
+      </div>
+      <div class="modal-body" id="sec-report-modal-content" style="max-height: 75vh; overflow-y: auto; padding-top: 16px;">
+        <div class="empty-state">Loading security report...</div>
+      </div>
+      <div class="modal-footer" id="sec-report-modal-footer" style="padding-top: 12px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 8px;">
+        <button class="btn btn-secondary" onclick="closeModal('modal-security-report')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
